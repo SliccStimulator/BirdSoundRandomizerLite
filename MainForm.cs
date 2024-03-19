@@ -6,6 +6,8 @@ namespace BirdSoundRandomizerLite
 {
     public partial class MainForm : Form
     {
+        private WindowsMediaPlayer SoundPlayer = new WindowsMediaPlayer();
+
         public MainForm()
         {
             InitializeComponent();
@@ -66,7 +68,7 @@ namespace BirdSoundRandomizerLite
         {
             var currDataEntry = new SoundEntry(filePath, new Control[4]);
 
-            int currRowY = 43 + (40 * DataManager.SelectedSounds.Count);
+            int currRowY = fileNameLabel.Location.Y + 30 + (40 * DataManager.SelectedSounds.Count);
 
             // create controls
             var fileNameLbl = new Label
@@ -94,7 +96,7 @@ namespace BirdSoundRandomizerLite
             {
                 Width = 23,
                 Height = 23,
-                Location = new Point(selectedSoundsPanel.Width - 160, currRowY),
+                Location = new Point(selectedSoundsPanel.Width - (selectedSoundsPanel.VerticalScroll.Visible ? 177 : 160), currRowY),
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 BackgroundImage = Resources.speaker_icon,
                 BackgroundImageLayout = ImageLayout.Stretch
@@ -102,23 +104,45 @@ namespace BirdSoundRandomizerLite
 
             playSoundButton.Click += (sender, e) =>
             {
-                var player = new WindowsMediaPlayer();
-                player.URL = filePath;
-                player.controls.play();
+                SoundPlayer.URL = filePath;
+                SoundPlayer.controls.play();
             };
 
             var deleteButton = new Button
             {
                 Width = 23,
                 Height = 23,
-                Location = new Point(selectedSoundsPanel.Width - 60, currRowY),
+                Location = new Point(selectedSoundsPanel.Width - (selectedSoundsPanel.VerticalScroll.Visible ? 77 : 60), currRowY),
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 Text = "X",
                 Font = new Font(Font, FontStyle.Bold),
                 ForeColor = Color.Red
             };
 
-            // TODO implement deletion functionality
+            deleteButton.Click += (sender, e) =>
+            {
+                // remove controls from form
+                foreach (Control currControl in currDataEntry.AssociatedControls)
+                {
+                    selectedSoundsPanel.Controls.Remove(currControl);
+                }
+
+                // adjust Y position of controls below deleted ones
+                int deletionIndex = DataManager.SelectedSounds.IndexOf(currDataEntry);
+
+                if (deletionIndex >= 0)
+                {
+                    DataManager.SelectedSounds.RemoveAt(deletionIndex);
+
+                    for (int i = deletionIndex; i < DataManager.SelectedSounds.Count; i++)
+                    {
+                        foreach (Control currControl in DataManager.SelectedSounds[i].AssociatedControls)
+                        {
+                            currControl.Location = new Point(currControl.Location.X, currControl.Location.Y - 40);
+                        }
+                    }
+                }
+            };
 
             // add controls to data object
             currDataEntry.AssociatedControls = [fileNameLbl, birdNameTxtBox, playSoundButton, deleteButton];

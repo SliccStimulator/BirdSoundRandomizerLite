@@ -47,15 +47,15 @@
             selectionCommandLabel.Anchor = AnchorStyles.Top;
             selectionCommandLabel.AutoSize = true;
             selectionCommandLabel.Font = new Font("Segoe UI", 26.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            selectionCommandLabel.Location = new Point(123, 22);
+            selectionCommandLabel.Location = new Point(80, 28);
             selectionCommandLabel.Name = "selectionCommandLabel";
-            selectionCommandLabel.Size = new Size(556, 47);
+            selectionCommandLabel.Size = new Size(640, 47);
             selectionCommandLabel.TabIndex = 0;
-            selectionCommandLabel.Text = "Select MP3s G*nniveve \U0001f92c\U0001f92c\U0001f92c";
+            selectionCommandLabel.Text = "Drop MP3 Files Below or Click the (+)";
             // 
             // mp3SelectDialog
             // 
-            mp3SelectDialog.Filter = "MP3 Files|*.mp3|WAV Files|*.wav";
+            mp3SelectDialog.Filter = "MP3 Files|*.mp3";
             // 
             // mp3DropBox
             // 
