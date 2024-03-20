@@ -30,15 +30,14 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             selectionCommandLabel = new Label();
-            mp3SelectDialog = new OpenFileDialog();
-            mp3DropBox = new PictureBox();
+            soundSelectDialog = new OpenFileDialog();
+            soundDropBox = new PictureBox();
             startButton = new Button();
             selectedSoundsLabel = new Label();
             selectedSoundsPanel = new Panel();
             birdNameLabel = new Label();
             fileNameLabel = new Label();
-            testBtn = new Button();
-            ((System.ComponentModel.ISupportInitialize)mp3DropBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)soundDropBox).BeginInit();
             selectedSoundsPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -47,33 +46,36 @@
             selectionCommandLabel.Anchor = AnchorStyles.Top;
             selectionCommandLabel.AutoSize = true;
             selectionCommandLabel.Font = new Font("Segoe UI", 26.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            selectionCommandLabel.Location = new Point(80, 28);
+            selectionCommandLabel.Location = new Point(77, 25);
             selectionCommandLabel.Name = "selectionCommandLabel";
-            selectionCommandLabel.Size = new Size(640, 47);
+            selectionCommandLabel.Size = new Size(643, 47);
             selectionCommandLabel.TabIndex = 0;
-            selectionCommandLabel.Text = "Drop MP3 Files Below or Click the (+)";
+            selectionCommandLabel.Text = "Drop Sound Files Below or Click the +";
             // 
-            // mp3SelectDialog
+            // soundSelectDialog
             // 
-            mp3SelectDialog.Filter = "MP3 Files|*.mp3";
+            soundSelectDialog.Filter = "Audio Files|*.mp3;*.flac;*.aac;*.adt;*.adts;*.m4a;*.wav;*.wma;*.ac3;*.3gp;*.3g2;*.amr;*.mka;*.oga;*.ogg;*.opus";
+            soundSelectDialog.Multiselect = true;
             // 
-            // mp3DropBox
+            // soundDropBox
             // 
-            mp3DropBox.AllowDrop = true;
-            mp3DropBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            mp3DropBox.BackColor = SystemColors.Control;
-            mp3DropBox.BackgroundImage = Properties.Resources.lil_plus;
-            mp3DropBox.BackgroundImageLayout = ImageLayout.Center;
-            mp3DropBox.BorderStyle = BorderStyle.Fixed3D;
-            mp3DropBox.Cursor = Cursors.Hand;
-            mp3DropBox.Location = new Point(97, 93);
-            mp3DropBox.Name = "mp3DropBox";
-            mp3DropBox.Size = new Size(598, 100);
-            mp3DropBox.TabIndex = 1;
-            mp3DropBox.TabStop = false;
-            mp3DropBox.DragEnter += DropBox_OnDragEnter;
-            mp3DropBox.DragLeave += DropBox_OnMouseLeave;
-            mp3DropBox.MouseLeave += DropBox_OnMouseLeave;
+            soundDropBox.AllowDrop = true;
+            soundDropBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            soundDropBox.BackColor = SystemColors.Control;
+            soundDropBox.BackgroundImage = Properties.Resources.lil_plus;
+            soundDropBox.BackgroundImageLayout = ImageLayout.Center;
+            soundDropBox.BorderStyle = BorderStyle.Fixed3D;
+            soundDropBox.Cursor = Cursors.Hand;
+            soundDropBox.Location = new Point(97, 93);
+            soundDropBox.Name = "soundDropBox";
+            soundDropBox.Size = new Size(598, 100);
+            soundDropBox.TabIndex = 1;
+            soundDropBox.TabStop = false;
+            soundDropBox.Click += DropBox_OnClick;
+            soundDropBox.DragDrop += DropBox_OnDragDrop;
+            soundDropBox.DragEnter += DropBox_OnDragEnter;
+            soundDropBox.DragLeave += DropBox_OnMouseLeave;
+            soundDropBox.MouseLeave += DropBox_OnMouseLeave;
             // 
             // startButton
             // 
@@ -130,33 +132,23 @@
             fileNameLabel.TabIndex = 7;
             fileNameLabel.Text = "File Name";
             // 
-            // testBtn
-            // 
-            testBtn.Location = new Point(699, 199);
-            testBtn.Name = "testBtn";
-            testBtn.Size = new Size(75, 23);
-            testBtn.TabIndex = 7;
-            testBtn.Text = "test";
-            testBtn.UseVisualStyleBackColor = true;
-            testBtn.Click += Test;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoScroll = true;
             ClientSize = new Size(784, 561);
-            Controls.Add(testBtn);
             Controls.Add(selectedSoundsPanel);
             Controls.Add(selectedSoundsLabel);
             Controls.Add(startButton);
-            Controls.Add(mp3DropBox);
+            Controls.Add(soundDropBox);
             Controls.Add(selectionCommandLabel);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(800, 600);
             Name = "MainForm";
             Text = "Bird Sound Randomizer Lite";
-            ((System.ComponentModel.ISupportInitialize)mp3DropBox).EndInit();
+            Click += DropBox_OnClick;
+            ((System.ComponentModel.ISupportInitialize)soundDropBox).EndInit();
             selectedSoundsPanel.ResumeLayout(false);
             selectedSoundsPanel.PerformLayout();
             ResumeLayout(false);
@@ -166,13 +158,12 @@
         #endregion
 
         private Label selectionCommandLabel;
-        private OpenFileDialog mp3SelectDialog;
-        private PictureBox mp3DropBox;
+        private OpenFileDialog soundSelectDialog;
+        private PictureBox soundDropBox;
         private Button startButton;
         private Label selectedSoundsLabel;
         private Panel selectedSoundsPanel;
         private Label birdNameLabel;
         private Label fileNameLabel;
-        private Button testBtn;
     }
 }

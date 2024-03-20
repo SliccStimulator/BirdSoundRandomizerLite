@@ -6,7 +6,13 @@ namespace BirdSoundRandomizerLite
 {
     public partial class MainForm : Form
     {
-        private WindowsMediaPlayer SoundPlayer = new WindowsMediaPlayer();
+        private static readonly string[] SupportedFileExtensions = [".mp3", ".flac", ".aac",
+                                                                    ".adt", ".adts", ".m4a",
+                                                                    ".wav", ".wma", ".ac3",
+                                                                    ".3gp", ".3g2", ".amr",
+                                                                    ".mka", ".oga", ".ogg", ".opus"];
+
+        private readonly WindowsMediaPlayer SoundPlayer = new WindowsMediaPlayer();
 
         public MainForm()
         {
@@ -37,6 +43,57 @@ namespace BirdSoundRandomizerLite
             }
         }
 
+        private void DropBox_OnDragDrop(object sender, DragEventArgs e)
+        {
+            if (sender is not PictureBox)
+            {
+                return;
+            }
+
+            var dropBox = (PictureBox)sender;
+
+            // revert dropbox color
+            dropBox.BackColor = SystemColors.Control;
+
+            // attempt to get file names
+            if (e.Data != null && e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var data = e.Data.GetData(DataFormats.FileDrop);
+
+                string[] fileNames = data == null ? [] : (string[])data;
+
+                // iterate over file names
+                var invalidFiles = new List<string>();
+
+                foreach (string currFileName in fileNames)
+                {
+                    if (FileTypeSupported(currFileName))
+                    {
+                        // add valid sounds
+                        AddSound(currFileName);
+                    }
+                    else
+                    {
+                        // record rejected files
+                        invalidFiles.Add(currFileName);
+                    }
+                }
+
+                // inform the user if any files could not be added
+                if (invalidFiles.Count > 0)
+                {
+                    string notificationMessage = "The following files could not be added because they are not valid sound files:";
+
+                    foreach (string currFileName in invalidFiles)
+                    {
+                        notificationMessage += "\n- " + ShortName(currFileName);
+                    }
+
+                    MessageBox.Show(notificationMessage, "Invalid File Types Detected", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
         private void DropBox_OnMouseLeave(object sender, EventArgs e)
         {
             if (sender is not PictureBox)
@@ -49,15 +106,19 @@ namespace BirdSoundRandomizerLite
 
         private void DropBox_OnClick(object sender, EventArgs e)
         {
-            if (sender != mp3DropBox)
+            if (sender != soundDropBox)
             {
                 return;
             }
-        }
 
-        private void Test(object sender, EventArgs e)
-        {
-            AddSound(@"D:\Documents\Special_Sounds\ben's evil sounds.mp3");
+            // show file dialog and check result
+            if (soundSelectDialog.ShowDialog() == DialogResult.OK)
+            {
+                foreach (string currFileName in soundSelectDialog.FileNames)
+                {
+                    AddSound(currFileName);
+                }
+            }
         }
 
         /**
@@ -168,6 +229,17 @@ namespace BirdSoundRandomizerLite
             }
 
             return fileName;
+        }
+
+        /**
+         * Determines whether or not the given filePath refers to a file
+         * with a supported file type
+         */
+        private static bool FileTypeSupported(string filePath)
+        {
+            string fileExtension = Path.GetExtension(filePath).ToLower();
+
+            return SupportedFileExtensions.Contains(fileExtension);
         }
     }
 }
