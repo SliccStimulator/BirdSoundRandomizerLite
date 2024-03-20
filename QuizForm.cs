@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,27 +17,55 @@ namespace BirdSoundRandomizerLite
         private readonly Random Randomizer = new Random();
         private readonly WindowsMediaPlayer soundPlayer = new WindowsMediaPlayer();
 
+        private List<SoundEntry> ShuffledEntries = new List<SoundEntry>();
+        private int NextSoundIndex = 0;
+
         private string CurrentFilePath {  get; set; }
 
         public QuizForm()
         {
             CurrentFilePath = "";
+            ShuffledEntries.AddRange(DataManager.SelectedSounds);
 
             InitializeComponent();
-            LoadRandomSound();
+            ShuffleEntries();
+            LoadNextSound();
         }
 
-        private void LoadRandomSound()
+        private void ShuffleEntries()
         {
-            SoundEntry randomEntry = DataManager.SelectedSounds[Randomizer.Next(DataManager.SelectedSounds.Count)];
+            int currIndex = ShuffledEntries.Count;
+
+            while (currIndex > 1)
+            {
+                currIndex--;
+
+                int randomTarget = Randomizer.Next(currIndex + 1);
+
+                SoundEntry temp = ShuffledEntries[randomTarget];
+                ShuffledEntries[randomTarget] = ShuffledEntries[currIndex];
+                ShuffledEntries[currIndex] = temp;
+            }
+        }
+
+        private void LoadNextSound()
+        {
+            SoundEntry nextEntry = ShuffledEntries[NextSoundIndex];
+
+            NextSoundIndex = (NextSoundIndex + 1) % ShuffledEntries.Count;
+
+            if (NextSoundIndex == 0)
+            {
+                ShuffleEntries();
+            }
 
             // open sound file in player and play
-            CurrentFilePath = randomEntry.FilePath;
-            soundPlayer.URL = randomEntry.FilePath;
+            CurrentFilePath = nextEntry.FilePath;
+            soundPlayer.URL = nextEntry.FilePath;
             soundPlayer.controls.play();
 
             // change bird label text and center
-            birdNameLbl.Text = randomEntry.Name;
+            birdNameLbl.Text = nextEntry.Name;
             birdNameLbl.Location = new Point((this.Width) / 2 - (birdNameLbl.Width / 2), birdNameLbl.Location.Y);
         }
 
@@ -70,7 +99,7 @@ namespace BirdSoundRandomizerLite
             nextButton.Enabled = false;
 
             // load new random sound
-            LoadRandomSound();
+            LoadNextSound();
         }
     }
 }
