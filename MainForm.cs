@@ -121,6 +121,13 @@ namespace BirdSoundRandomizerLite
             }
         }
 
+        private void BeginStudySesh_OnClick(object sender, EventArgs e)
+        {
+            var quizForm = new QuizForm();
+
+            quizForm.ShowDialog();
+        }
+
         /**
          * Sets up form controls and data stuff for a new sound
          * file when it gets added or whatever
@@ -151,6 +158,7 @@ namespace BirdSoundRandomizerLite
             birdNameTxtBox.KeyUp += (sender, e) =>
             {
                 currDataEntry.Name = birdNameTxtBox.Text;
+                CheckNameFields();
             };
 
             var playSoundButton = new Button
@@ -203,6 +211,9 @@ namespace BirdSoundRandomizerLite
                         }
                     }
                 }
+
+                // check whether or not all name fields are filled
+                CheckNameFields();
             };
 
             // add controls to data object
@@ -213,6 +224,34 @@ namespace BirdSoundRandomizerLite
 
             // add data entry to global list
             DataManager.SelectedSounds.Add(currDataEntry);
+        }
+
+        /**
+         * Checks whether or not all name fields are filled, and if they
+         * are, enable the start button
+         */
+        private void CheckNameFields()
+        {
+            // handle case wehere no sounds are selected
+            if (DataManager.SelectedSounds.Count == 0)
+            {
+                startButton.Enabled = false;
+                return;
+            }
+
+            // iterate over fields and make sure they're filled
+            bool allFilled = true;
+
+            foreach (SoundEntry currEntry in DataManager.SelectedSounds)
+            {
+                if (currEntry.AssociatedControls[1].Text.Trim() == "")
+                {
+                    allFilled = false;
+                    break;
+                }
+            }
+
+            startButton.Enabled = allFilled;
         }
 
         /**

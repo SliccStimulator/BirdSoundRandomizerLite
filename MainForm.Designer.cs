@@ -37,6 +37,7 @@
             selectedSoundsPanel = new Panel();
             birdNameLabel = new Label();
             fileNameLabel = new Label();
+            startConditionLabel = new Label();
             ((System.ComponentModel.ISupportInitialize)soundDropBox).BeginInit();
             selectedSoundsPanel.SuspendLayout();
             SuspendLayout();
@@ -81,12 +82,13 @@
             // 
             startButton.Anchor = AnchorStyles.Bottom;
             startButton.Enabled = false;
-            startButton.Location = new Point(335, 504);
+            startButton.Location = new Point(335, 483);
             startButton.Name = "startButton";
             startButton.Size = new Size(135, 45);
             startButton.TabIndex = 2;
             startButton.Text = "Begin Study Sesh";
             startButton.UseVisualStyleBackColor = true;
+            startButton.Click += BeginStudySesh_OnClick;
             // 
             // selectedSoundsLabel
             // 
@@ -108,7 +110,7 @@
             selectedSoundsPanel.Controls.Add(fileNameLabel);
             selectedSoundsPanel.Location = new Point(97, 230);
             selectedSoundsPanel.Name = "selectedSoundsPanel";
-            selectedSoundsPanel.Size = new Size(598, 268);
+            selectedSoundsPanel.Size = new Size(598, 247);
             selectedSoundsPanel.TabIndex = 6;
             // 
             // birdNameLabel
@@ -132,12 +134,23 @@
             fileNameLabel.TabIndex = 7;
             fileNameLabel.Text = "File Name";
             // 
+            // startConditionLabel
+            // 
+            startConditionLabel.Anchor = AnchorStyles.Bottom;
+            startConditionLabel.AutoSize = true;
+            startConditionLabel.Location = new Point(237, 547);
+            startConditionLabel.Name = "startConditionLabel";
+            startConditionLabel.Size = new Size(331, 15);
+            startConditionLabel.TabIndex = 7;
+            startConditionLabel.Text = "(All bird names must be filled in before beginning study sesh)";
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoScroll = true;
-            ClientSize = new Size(784, 561);
+            ClientSize = new Size(784, 571);
+            Controls.Add(startConditionLabel);
             Controls.Add(selectedSoundsPanel);
             Controls.Add(selectedSoundsLabel);
             Controls.Add(startButton);
@@ -165,5 +178,6 @@
         private Panel selectedSoundsPanel;
         private Label birdNameLabel;
         private Label fileNameLabel;
+        private Label startConditionLabel;
     }
 }
